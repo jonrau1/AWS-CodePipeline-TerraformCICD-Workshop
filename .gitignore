@@ -1,9 +1,10 @@
-#  Local .terraform directories
+# *.tfvars (using this still for now)
 **/.terraform/*
-
-# .tfstate files
 *.tfstate
 *.tfstate.*
-
-# .tfvars files
-*.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+*tfplan*
