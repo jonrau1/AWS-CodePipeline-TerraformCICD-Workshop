@@ -1,7 +1,7 @@
-# AWS-TerraformRemoteState-Workshop
-#### Proof of Concept demonstrating how to build resources to store Terraform State and provide State Locking on AWS via S3 (Object Storage) and DynamoDB (Managed NoSQL DB)
-These Terraform scripts will allow you to build the needed resources to store your Terraform State Files in a versioned, durable backend (AWS S3) as well as provide State Locking via a Manged NoSQL Database (AWS DynamoDB). This allows you to share your Terraform States, as well as lock the state to prevent unapproved changes or overwrites to your codified infrastructure.
-The sub-repo's will allow you to build out the backend infrastructure locally, then initiate the new backend and migrate your local *.tfstate into a path and file you specifiy
+# AWS CodePipeline & Terraform CI/CD Workshop
+#### Proof of Concept demonstrating how to Configure Terraform, Create a Remote Backend, Create your CI/CD Infrastructure and Perform Deployments from your SCM into AWS via CodePipeline & CodeCommit
+These Terraform scripts will allow you to build the needed resources to store your Terraform State Files in a versioned, durable backend (AWS S3) as well as provide State Locking via a Manged NoSQL Database (AWS DynamoDB). This allows you to share your Terraform States, as well as lock the state to prevent unapproved changes or overwrites to your codified infrastructure. The sub-repo's will allow you to build out the backend infrastructure locally, then initiate the new backend and migrate your local *.tfstate into a path and file you specifiy.
+Following successful setup of your S3 Backend, you can then create and deploy your codified infrastructure needed for CI/CD via AWS CodePipeline, CodeBuild and a SCM of your choosing (Github or CodeCommit)
 
 ## Getting Started
 
@@ -23,7 +23,7 @@ The sub-repo's will allow you to build out the backend infrastructure locally, t
 
 ### Prepare your Remote Infrastructure
 1. Clone This Repository
-`git clone https://github.com/jonrau1/AWS-TerraformRemoteState-Workshop.git`
+`git clone https://github.com/jonrau1/AWS-CodePipeline-TerraformCICD-Workshop.git`
 2. Navigate to the Remotes Directory
 `cd remotes`
 3. Enter in your Region into your Provider, without an access key / secret key defined Terraform will call EC2 Metadata for temporary credentials, provided you have an EC2 Instance Profile with proper permissions attached to your Instance (https://www.terraform.io/docs/providers/aws/index.html)
@@ -46,5 +46,4 @@ The sub-repo's will allow you to build out the backend infrastructure locally, t
 4. Delete the local tfstate.* files after confirming they are in your S3 Backend
 `rm terraform.tfstate && terraform.tfstate.backup`
 
-## Next Steps
-You can now include that `terraform.tf` file with all of your deployments to ensure you State is stored securely and durably, you can also copy out that configuration and drop it into `provider.tf` or `data.tf` files based on your Development Organization's discretion. Using the `key` parameter in the syntax, you can also specify file paths in S3 to denote different Regions / Teams / Departments. You can also start to include these into your CI/CD process -- if you use AWS CodePipeline with AWS CodeBuild, having this file in your SCM (CodeCommit, Github, etc) to kick off your build stage ensures the infrastructure that CodeBuild creates with have the state file output somewhere in case changes need to be made / infrastructure needs to be destroyed outside of the ephemeral CodeBuild container.
+## Creating the CI/CD Toolchain Infrastructure
