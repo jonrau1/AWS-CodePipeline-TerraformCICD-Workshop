@@ -26,11 +26,25 @@ The sub-repo's will allow you to build out the backend infrastructure locally, t
 `git clone https://github.com/jonrau1/AWS-TerraformRemoteState-Workshop.git`
 2. Navigate to the Remotes Directory
 `cd remotes`
-3. Enter a Unique DNS Compliant Name for your S3 Bucket && A Unique Name for your DynamoDB Table
+3. Enter in your Region into your Provider, without an access key / secret key defined Terraform will call EC2 Metadata for temporary credentials, provided you have an EC2 Instance Profile with proper permissions attached to your Instance (https://www.terraform.io/docs/providers/aws/index.html)
+`nano provider.tf`
+4. Enter a Unique DNS Compliant Name for your S3 Bucket && A Unique Name for your DynamoDB Table
 `nano remotes.tf`
-4. Initialize Terraform & Download AWS Provider
+5. Initialize Terraform & Download AWS Provider
 `terraform init`
-5. Create a Terraform Execution Plan (https://www.terraform.io/docs/commands/plan.html)
+6. Create a Terraform Execution Plan (https://www.terraform.io/docs/commands/plan.html)
 `terraform plan` 
-6. Apply the Terraform Execution Plan (https://www.terraform.io/docs/commands/apply.html)
+7. Apply the Terraform Execution Plan (https://www.terraform.io/docs/commands/apply.html)
 `terraform apply`
+
+### Migrate to your Remote Backend
+1. Retrive the `terraform.tf` file from the `s3 backend template` and copy it to your `remotes` folder
+2. Fill out the `terraform.tf` file to include the name of your S3 Bucket, DynamoDB Table and whatever folder path and naming convention you need your State File to follow
+`nano terraform.tf`
+3. Reinitialize Terraform, this will copy your current State to your S3 Backend (https://www.terraform.io/docs/backends/types/s3.html)
+`terraform init`
+4. Delete the local tfstate.* files after confirming they are in your S3 Backend
+`rm terraform.tfstate && terraform.tfstate.backup`
+
+## Next Steps
+You can now include that `terraform.tf` file with all of your deployments to ensure you State is stored securely and durably, you can also copy out that configuration and drop it into `provider.tf` or `data.tf` files based on your Development Organization's discretion. Using the `key` parameter in the syntax, you can also specify file paths in S3 to denote different Regions / Teams / Departments. You can also start to include these into your CI/CD process -- if you use AWS CodePipeline with AWS CodeBuild, having this file in your SCM (CodeCommit, Github, etc) to kick off your build stage ensures the infrastructure that CodeBuild creates with have the state file output somewhere in case changes need to be made / infrastructure needs to be destroyed outside of the ephemeral CodeBuild container.
